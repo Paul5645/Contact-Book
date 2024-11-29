@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Contact Book
+  datasource:
+    generate-unique-name: false
+    name: contact_book
