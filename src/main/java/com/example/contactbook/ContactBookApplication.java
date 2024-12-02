@@ -17,12 +17,10 @@ public class ContactBookApplication {
     @Bean
     public CommandLineRunner loadData(ContactRepository contactRepository) {
         return args -> {
-            // Создаем три контакта
             Contact contact1 = new Contact(null, "Alice Johnson", "1234567890", "alice@example.com");
             Contact contact2 = new Contact(null, "Bob Smith", "0987654321", "bob@example.com");
             Contact contact3 = new Contact(null, "Charlie Brown", "1122334455", "charlie@example.com");
 
-            // Сохраняем контакты в базу данных
             contactRepository.save(contact1);
             contactRepository.save(contact2);
             contactRepository.save(contact3);
