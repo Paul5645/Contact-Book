@@ -16,14 +16,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис для работы с контактами.
+ * Содержит методы для получения, создания, обновления, удаления контактов и их валидации.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ContactService {
+
     private final ContactRepository contactRepository;
     private final Validator validator;
     private final ModelMapper mapper;
 
+    /**
+     * Получение контакта по его идентификатору.
+     *
+     * @param id Идентификатор контакта
+     * @return Объект {@link ContactResponseDto} с информацией о контакте
+     * @throws ContactNotFoundException Если контакт с таким идентификатором не найден
+     */
     public ContactResponseDto getContactById(Long id) {
         log.info("Fetching contact by ID {}", id);
         Contact contact = contactRepository.findById(id)
@@ -32,6 +44,11 @@ public class ContactService {
         return mapper.map(contact, ContactResponseDto.class);
     }
 
+    /**
+     * Получение всех контактов.
+     *
+     * @return Список объектов {@link ContactResponseDto} с информацией о всех контактах
+     */
     public List<ContactResponseDto> getAllContacts() {
         log.info("Fetching all contacts");
         List<ContactResponseDto> contacts = contactRepository.findAll()
@@ -42,6 +59,12 @@ public class ContactService {
         return contacts;
     }
 
+    /**
+     * Создание нового контакта.
+     *
+     * @param contactRequestDto Объект {@link ContactRequestDto} с информацией о новом контакте
+     * @return Объект {@link ContactResponseDto} с данными созданного контакта
+     */
     public ContactResponseDto createContact(ContactRequestDto contactRequestDto) {
         log.info("Creating new contact.");
         Contact contact = mapper.map(contactRequestDto, Contact.class);
@@ -51,6 +74,13 @@ public class ContactService {
         return mapper.map(savedContact, ContactResponseDto.class);
     }
 
+    /**
+     * Обновление существующего контакта или создание нового, если контакт с таким идентификатором не найден.
+     *
+     * @param id Идентификатор контакта
+     * @param contactRequestDto Объект {@link ContactRequestDto} с данными контакта
+     * @return Объект {@link ContactResponseDto} с данными обновленного или созданного контакта
+     */
     public ContactResponseDto saveOrUpdateContact(Long id, ContactRequestDto contactRequestDto) {
         log.info("Updating or creating contact with ID {}.", id);
         Contact contact = mapper.map(contactRequestDto, Contact.class);
@@ -61,6 +91,12 @@ public class ContactService {
         return mapper.map(savedContact, ContactResponseDto.class);
     }
 
+    /**
+     * Удаление контакта по идентификатору.
+     *
+     * @param id Идентификатор контакта
+     * @throws ContactNotFoundException Если контакт с таким идентификатором не найден
+     */
     public void deleteContact(Long id) {
         log.info("Deleting contact with ID {}", id);
         if (!contactRepository.existsById(id)) {
@@ -70,6 +106,12 @@ public class ContactService {
         log.info("Contact with ID {} deleted successfully", id);
     }
 
+    /**
+     * Валидация контакта перед сохранением.
+     *
+     * @param contact Объект {@link Contact} для валидации
+     * @throws IllegalArgumentException Если валидация не пройдена
+     */
     private void validateContact(Contact contact) {
         log.info("Validating contact...");
         Set<ConstraintViolation<Contact>> violations = validator.validate(contact);

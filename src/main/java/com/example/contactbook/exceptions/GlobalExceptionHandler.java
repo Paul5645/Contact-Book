@@ -6,10 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Глобальный обработчик исключений для обработки ошибок в приложении.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Обрабатывает исключение {@link ContactNotFoundException}, возникающее при попытке доступа к несуществующему контакту.
+     *
+     * @param ex Исключение {@link ContactNotFoundException}.
+     * @return Ответ с информацией об ошибке и статусом 404 (NOT FOUND).
+     */
     @ExceptionHandler(ContactNotFoundException.class)
     public ResponseEntity<AppError> handleContactNotFoundException(ContactNotFoundException ex) {
         log.error("Contact not found: {}", ex.getMessage());
@@ -17,6 +26,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Обрабатывает исключение {@link IllegalArgumentException}, возникающее при передаче недопустимого аргумента.
+     *
+     * @param ex Исключение {@link IllegalArgumentException}.
+     * @return Ответ с информацией об ошибке и статусом 400 (BAD REQUEST).
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<AppError> handleIllegalArgumentException(IllegalArgumentException ex) {
         log.error("Illegal argument: {}", ex.getMessage());
@@ -24,6 +39,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обрабатывает любые неожиданные исключения, возникающие во время выполнения приложения.
+     *
+     * @param ex Исключение {@link Exception}.
+     * @return Ответ с информацией об ошибке и статусом 500 (INTERNAL SERVER ERROR).
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<AppError> handleGenericException(Exception ex) {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
