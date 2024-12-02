@@ -1,8 +1,11 @@
 package com.example.contactbook.dto;
 
+import lombok.Data;
 
-public class ContactDto {
+@Data
+public class ContactResponseDto {
     private Long id;
+
     private String name;
 
     private String phoneNumber;
